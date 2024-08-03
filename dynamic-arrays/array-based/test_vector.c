@@ -66,11 +66,11 @@ int main(void){
 
     printf("--- delete_all 2, 5[incorrect]\n");
 
-    printf("%d, ", delete_all_in_vector_array(vector1, 2)); // correct
-    printf("%d\n", delete_all_in_vector_array(vector1, 5)); // incorrect
+    printf("%d, ", delete_all_vector_array(vector1, 2)); // correct
+    printf("%d\n", delete_all_vector_array(vector1, 5)); // incorrect
 
-    printf("%d, ", delete_all_in_vector_array(vector2, 2)); // correct
-    printf("%d\n", delete_all_in_vector_array(vector2, 5)); // incorrect
+    printf("%d, ", delete_all_vector_array(vector2, 2)); // correct
+    printf("%d\n", delete_all_vector_array(vector2, 5)); // incorrect
 
     printf("\nexpected: 3, 4\n");
     print_vector(vector1); // 3, 4
@@ -181,6 +181,21 @@ int main(void){
     printf("%d\n", clear_vector_array(vector2));
 
     printf("\nexpected: empty\n");
+    print_vector(vector1); // empty
+    print_vector(vector2); // empty
+
+    printf("making sure size cant be set to 0\n");
+    printf("insert in 1, insert in 1, delete all 1\n");
+
+    insert_in_vector_array(vector1, 1);
+    insert_in_vector_array(vector1, 1);
+    delete_all_vector_array(vector1, 1);
+
+    insert_in_vector_array(vector2, 1);
+    insert_in_vector_array(vector2, 1);
+    delete_all_vector_array(vector2, 1);
+
+    printf("\nexpected: size is 1\n");
     print_vector(vector1); // empty
     print_vector(vector2); // empty
 

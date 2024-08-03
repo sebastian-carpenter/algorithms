@@ -7,13 +7,13 @@
 // double the size of the data array in the provided vector_array
 // iff vector->index == vector->size
 // parameters: vector_array *
-// returns: 0 if array stayed the same / grew, 1 if unable to grow array
+// returns: 0 if array stayed the same / grew, 10 if unable to grow array
 int try_bigger_vector_array(vector_array *);
 
 // set size of vector array to vector->index * 2 iff vector->index is 30% of vector->size
 // normally this sets the array size to about 60%, but in some cirumstances it can be less
 // parameters: vector_array *
-// returns: 0 if array stayed the same / shrank, 1 if unable to shrink array
+// returns: 0 if array stayed the same / shrank, 10 if unable to shrink array
 int try_smaller_vector_array(vector_array *);
 
 // shift all cells after and including the index to the right
@@ -94,7 +94,7 @@ int delete_in_vector_array(vector_array * vector, long value){
     return 1;
 }
 
-int delete_all_in_vector_array(vector_array * vector, long value){
+int delete_all_vector_array(vector_array * vector, long value){
 
     // this works backwards since with multiple deletions the
     // performance should be better
@@ -132,15 +132,17 @@ void delete_vector_array(vector_array * vector){
 
 int clear_vector_array(vector_array * vector){
 
-    free(vector->data);
-
     vector->size = 1;
     vector->index = 0;
 
-    vector->data = malloc(sizeof(long));
+    long * replacement_array = malloc(sizeof(long));
 
-    if(vector->data == NULL) return 10;
-    else return 0;
+    if(replacement_array == NULL) return 10;
+
+    free(vector->data);
+    vector->data = replacement_array;
+
+    return 0;
 }
 
 int replace_in_vector_array(vector_array * vector, long value_to_replace, long value){
@@ -225,19 +227,35 @@ int try_bigger_vector_array(vector_array * vector){
 int try_smaller_vector_array(vector_array * vector){
 
     // do not need a smaller vector array
-    if(vector->index > vector->size * .3) return 0;
+    // NOTE: >= is to prevent redundant creation of size 1 arrays
+    if(vector->index >= vector->size * .3) return 0;
 
-    long * replacement_array = malloc(sizeof(long) * vector->index * 2);
-    if(replacement_array == NULL) return 10;
+    // don't want a size 0 array
+    if(vector->index == 0){
+        long * replacement_array = malloc(sizeof(long));
+        if(replacement_array == NULL) return 10;
 
-    for(unsigned int i = 0; i < vector->index; i++) replacement_array[i] = vector->data[i];
+        vector->size = 1;
 
-    vector->size = vector->index * 2;
+        free(vector->data);
+        vector->data = replacement_array;
 
-    free(vector->data);
-    vector->data = replacement_array;
+        return 0;
+    }
+    // general array creation method
+    else{
+        long * replacement_array = malloc(sizeof(long) * vector->index * 2);
+        if(replacement_array == NULL) return 10;
 
-    return 0;
+        for(unsigned int i = 0; i < vector->index; i++) replacement_array[i] = vector->data[i];
+
+        vector->size = vector->index * 2;
+
+        free(vector->data);
+        vector->data = replacement_array;
+
+        return 0;
+    }
 }
 
 void inflate_vector_array(vector_array * vector, unsigned int index, long value){

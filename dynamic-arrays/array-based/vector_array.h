@@ -43,7 +43,7 @@ int delete_in_vector_array(vector_array *, long);
 // parameters: vector_array *, long value to remove
 // returns: 0 if successful, 1 if item did not exist, 10 could not shrink data array,
 //          11 if both issues exist
-int delete_all_in_vector_array(vector_array *, long);
+int delete_all_vector_array(vector_array *, long);
 
 // deletes value at specified index in vector array
 // parameters: vector_array *, unsigned int index to delete at
